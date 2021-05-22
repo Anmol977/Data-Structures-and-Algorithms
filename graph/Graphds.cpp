@@ -17,7 +17,7 @@ void printList(nodeptr ptr)
 void printdist(nodeptr ptr){
     while (ptr != nullptr)
     {
-        cout << "->" << ptr->val << " dist: "<<ptr->dist;
+        cout << " vertex: " << ptr->val << " dist: "<<ptr->dist;
         ptr = ptr->next;
     }
     cout << endl;
@@ -25,7 +25,7 @@ void printdist(nodeptr ptr){
 
 int main()
 {
-    int noofedges, src, dest, N;
+    int noofedges, src, dest, N, source;
     cout << "enter number of adjacency lists:" << endl;
     cin >> N;
     cout << "enter number of edges in the graph:" << endl;
@@ -41,17 +41,19 @@ int main()
     }
     graph graph(edges, N,noofedges);
     nodeptr temp = new node;
-    temp->val = 0;
-    temp->next = nullptr;
     cout << "the graph is:" << endl;
     for (int i = 0; i < N; i++)
     {
         cout << i;
         printList(graph.adjlisthead[i]);
     }
+    cout << "enter value of source vertex for BFS" << endl;
+    cin >> source;
+    temp->val = source;
+    temp->next = nullptr;
     graph.BFS(temp, graph.adjlisthead);
     for (int j = 0; j < N; j++) {
-        cout << j;
+        cout <<"through: "<< j<<" ";
         printdist(graph.adjlisthead[j]);
     }
     return 0;

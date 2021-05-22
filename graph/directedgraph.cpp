@@ -39,23 +39,13 @@ void graph::BFS( nodeptr source,nodeptr* adjlisthead) {
     front = nullptr;
     enqueue(&front, &source);
     while (front != nullptr) {
-        nodeptr temp = front;
-        cout << "queue:" << endl;
-        while (temp) {
-            cout << temp->val << " ";
-            temp = temp -> next;
-        }
-        cout << endl;
         u = dequeue(&front);
-        cout << "popped:" << u->val << endl;
         v = adjlisthead[u->val];
         while (v) {
             if(v->color==0){
                 v->dist = u->dist + 1;
                 v->color = 1;
-                cout <<"val:"<< v->val << " dist:" << v->dist << endl;
                 v->predecessor = u;
-                cout << "pushed:" <<v->val<< endl;
                 enqueue(&front, &v);
             }
             v = v->next;
