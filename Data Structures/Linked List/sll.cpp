@@ -81,7 +81,7 @@ nodeptr reverse_ll(nodeptr head)
     return thead;
 }
 
-void mid(nodeptr head)
+nodeptr mid(nodeptr head)
 {
     nodeptr a, b;
     a = head;
@@ -91,17 +91,55 @@ void mid(nodeptr head)
         b = b->next->next;
         a = a->next;
     }
-    std::cout << a->val << " is the mid node's value \n";
+    return a;
+}
+
+nodeptr merge(nodeptr a, nodeptr b)
+{
+    if (a == nullptr)
+        return b;
+    if (b == nullptr)
+        return a;
+    nodeptr c;
+    if (a->val < b->val)
+    {
+        c = a;
+        c->next = merge(a->next, b);
+    }
+    else
+    {
+        c = b;
+        c->next = merge(a, b->next);
+    }
+    return c;
+}
+
+nodeptr merge_sort(nodeptr head){
+    if(head == nullptr or head->next == nullptr)
+        return head;
+    nodeptr midnode = mid(head);
+    nodeptr a = head;
+    nodeptr b = midnode->next;
+    midnode->next = nullptr;
+    a = merge_sort(a);
+    b = merge_sort(b);
+    nodeptr res = merge(a,b);
+    return res;
 }
 
 int main()
 {
-    nodeptr head = nullptr;
+    nodeptr head = nullptr, head2 = nullptr;
+    std::cout << "ll1 \n";
     get_linked_list(head);
-    print_linked_list(head);
-    std::cout << std::boolalpha << search_ll(head, 5) << std::endl;
-    mid(head);
-    kth_ele_from_end(head, 3);
-    head = reverse_ll(head);
-    print_linked_list(head);
+    // std::cout << "ll2 \n";
+    // get_linked_list(head2);
+    // std::cout << std::boolalpha << search_ll(head, 5) << std::endl;
+    // mid(head);
+    // kth_ele_from_end(head, 3);
+    // head = reverse_ll(head);
+    // print_linked_list(head);
+    // nodeptr newll = merge(head, head2);
+    nodeptr newll = merge_sort(head);
+    print_linked_list(newll);
 }
