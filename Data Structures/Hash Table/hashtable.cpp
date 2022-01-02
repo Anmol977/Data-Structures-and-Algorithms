@@ -9,5 +9,6 @@ int main()
      h.insert("dolor", 150);
      h.insert("sit", 25);
      h.insert("amet", 40);
+     h.insert("consectetur ",101);
      h.print();
 }

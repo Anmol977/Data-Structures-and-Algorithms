@@ -1,6 +1,32 @@
 #include <string>
 #include <iostream>
 
+bool isprime(int n)
+{
+     if (n <= 3)
+          return true;
+     int i = 2;
+     while (i * i <= n)
+     {
+          if (n % i == 0)
+               return false;
+          i++;
+     }
+     return true;
+}
+
+int findnextprime(int n)
+{
+     bool res = false;
+     while (n++)
+     {
+          res = isprime(n);
+          if (res)
+               return n;
+     }
+     return n;
+}
+
 template <typename T>
 class Node
 {
@@ -29,19 +55,23 @@ class Hashtable
      int currsize;
      int maxsize;
 
-     int hashfunc(std::string s){
+     int hashfunc(std::string s)
+     {
           int idx = 0;
           int len = s.length();
           int p = 1;
-          for(int i = 0 ; i < len ; i++){
-               idx = (idx + (s[idx]*p)%maxsize)%maxsize;
-               p = (p*27)%maxsize;
+          for (int i = 0; i < len; i++)
+          {
+               idx = idx + (s[idx] * p) % maxsize;
+               idx %= maxsize;
+               p = (p * 27) % maxsize;
           }
+          std::cout << "index for " << s << " is " << idx << std::endl;
           return idx;
      }
 
 public:
-     Hashtable(int n = 9)
+     Hashtable(int n = 7)
      {
           maxsize = n;
           currsize = 0;
@@ -50,22 +80,54 @@ public:
                table[i] = nullptr;
      }
 
-     void insert(std::string s, int val){
+     void insert(std::string s, int val)
+     {
           int idx = hashfunc(s);
-          Node<T>* n = new Node<T>(s,val);
+          Node<T> *n = new Node<T>(s, val);
           n->next = table[idx];
           table[idx] = n;
           currsize++;
+          float lf = currsize / (float)maxsize;
+          if (lf > 0.7)
+          {
+               rehash();
+          }
      }
-     void print(){
-          for(int i = 0 ; i < maxsize ; i++){
-               std::cout<<"idx "<<i<<" -> ";
-               Node<T>* temp = table[i];
-               while(temp != nullptr){
-                    std::cout<<temp->val<<" -> ";
+     void print()
+     {
+          for (int i = 0; i < maxsize; i++)
+          {
+               std::cout << "idx " << i << " -> ";
+               Node<T> *temp = table[i];
+               while (temp != nullptr)
+               {
+                    std::cout << temp->val << " -> ";
                     temp = temp->next;
                }
-               std::cout<<std::endl;
+               std::cout << std::endl;
           }
+     }
+     void rehash()
+     {
+          Node<T> **oldtable = table;
+          int oldmaxsize = maxsize;
+          maxsize = findnextprime(maxsize * 2);
+          currsize = 0;
+          table = new Node<T> *[maxsize];
+          for (int i = 0; i < maxsize; i++)
+               table[i] = nullptr;
+          Node<T> *temp;
+          for (int i = 0; i < oldmaxsize; i++)
+          {
+               temp = oldtable[i];
+               while (temp != nullptr)
+               {
+                    insert(temp->key, temp->val);
+                    temp = temp->next;
+               }
+               if (oldtable[i] != nullptr)
+                    delete oldtable[i];
+          }
+          delete[] oldtable;
      }
 };
