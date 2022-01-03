@@ -11,4 +11,11 @@ int main()
      h.insert("amet", 40);
      h.insert("consectetur ",101);
      h.print();
+     int* res = h.search("amet");
+     if(res==nullptr){
+          std::cout<<"not found \n";
+     }
+     else{
+          std::cout<<"the val of amet is: "<<*res;
+     }
 }

@@ -62,11 +62,10 @@ class Hashtable
           int p = 1;
           for (int i = 0; i < len; i++)
           {
-               idx = idx + (s[idx] * p) % maxsize;
+               idx = idx + (s[i] * p) % maxsize;
                idx %= maxsize;
                p = (p * 27) % maxsize;
           }
-          std::cout << "index for " << s << " is " << idx << std::endl;
           return idx;
      }
 
@@ -109,9 +108,11 @@ public:
      }
      void rehash()
      {
+          std::cout<<"***Rehashing** \n";
           Node<T> **oldtable = table;
           int oldmaxsize = maxsize;
           maxsize = findnextprime(maxsize * 2);
+          // maxsize = maxsize * 2;
           currsize = 0;
           table = new Node<T> *[maxsize];
           for (int i = 0; i < maxsize; i++)
@@ -129,5 +130,17 @@ public:
                     delete oldtable[i];
           }
           delete[] oldtable;
+     }
+     T* search(std::string s)
+     {
+          int idx = hashfunc(s);
+          Node<T> *temp = table[idx];
+          while (temp != nullptr)
+          {
+               if (temp->key == s)
+                    return &temp->val;
+               temp = temp->next;
+          }
+          return nullptr;
      }
 };
